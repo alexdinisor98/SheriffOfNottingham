@@ -1,0 +1,16 @@
+Sheriff of Nottingham 
+
+A minimalist version of the game, using basic concepts of OOP such as aggregation, 
+inheritance, overriding and overloading, respecting the SOLID principles.
+
+I searched the assets in hand, so as  to declare the type of assets in the bag 
+and I added an illegal asset in the bag depending on each type of the player 
+
+I created for each type of player a method used for the player when he is a sheriff
+to inspect the bags of the other players / to accept their bribe / to allow 
+putting the declared assets on the merchant stand.
+
+At the end of the rounds, the bonus assets particular to each illegal asset. I
+used LinkedHashMap to compute the asset frequency.
+
+The output is the final score of every player descendincally.
