@@ -13,4 +13,4 @@ putting the declared assets on the merchant stand.
 At the end of the rounds, the bonus assets particular to each illegal asset. I
 used LinkedHashMap to compute the asset frequency.
 
-The output is the final score of every player descendincally.
+The output shows the final score of the players in a descending order.
