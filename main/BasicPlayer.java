@@ -33,12 +33,12 @@ public class BasicPlayer {
     }
 
     /**
-     * setez tipul de bun declarat din sac
+     * setting the declared type in the bag
      */
     void setDeclaredType() {
         int id = 0;
-        //doar carti ilegale
-        //adaug in sac o singura carte ILEGALA cu profitul maxim
+        //only illegal cards
+        //adding in the bag only an illegal card with the maximum profit
         if (countIllegals() == assetsInHand.size()) {
             this.declaredType = "Apple";
             id = indexOfTheMostProfitableIllegalAsset();
@@ -47,10 +47,10 @@ public class BasicPlayer {
         } else {
             int legalPenalty = LEGAL_PENALTY;
             id = indexOfTheMostFrequentAsset(legalPenalty);
-            //CAUT BUNURI LEGALE
+            //searching for legal assets
             this.declaredType = assetsInHand.get(id).name;
 
-            //adaug in sac toate bunurile = declaredType
+            //adding all assets in the bag = declaredType
             for (int i = 0; i < assetsInHand.size(); i++) {
                 if (assetsInHand.get(i).name.equals(declaredType)) {
                     assetsInBag.add(assetsInHand.get(i));
@@ -60,11 +60,13 @@ public class BasicPlayer {
             }
         }
     }
-
+    /**
+    * Get the index of the most frequent asset.
+    */
     final int indexOfTheMostFrequentAsset(final int penalty) {
-        //frecventa maxima a unui bun
+        // max frequency of an asset
         List<String> flavors = new LinkedList<>();
-        //elementele cu aceeasi penalty
+        //elements with the same penalty percentage
         for (int i = 0; i < ASSETS_IN_BAG; i++) {
             if (this.assetsInHand.get(i).penalty == penalty) {
                 flavors.add(this.assetsInHand.get(i).name);
@@ -75,20 +77,20 @@ public class BasicPlayer {
         for (String asset : flavors) {
             countAssets.put(asset, countAssets.getOrDefault(asset, 0) + 1);
         }
-        int freqMax = 0; // frecventa maxima
+        int freqMax = 0; 
         List<String> strings = new LinkedList<>();
         for (String key : countAssets.keySet()) {
             if (freqMax < countAssets.get(key)) {
                 freqMax = countAssets.get(key);
             }
         }
-        //adaug in lista doar elementele cu frecventa maxima
+        //adding in the list only assets with maximum frequency
         for (String key : countAssets.keySet()) {
             if (freqMax == countAssets.get(key)) {
                 strings.add(key);
             }
         }
-        int profitMax = 0; //profitul maxim
+        int profitMax = 0;
         int id = 0;
         for (int k = 0; k < strings.size(); k++) {
             for (int index = 0; index < this.assetsInHand.size(); index++) {
@@ -102,6 +104,9 @@ public class BasicPlayer {
         return id;
     }
 
+    /**
+    * Inspecting bags as basic sheriff.
+    */
     final void basicSheriffInspects(final List<BasicPlayer> players,
                                     final List<Assets> assetsNames) {
         int legalPenalty = LEGAL_PENALTY;
@@ -110,15 +115,15 @@ public class BasicPlayer {
             int numberOfAssetsInBag = players.get(i).assetsInBag.size();
 
             if (players.get(i) instanceof GreedyPlayer) {
-                //daca jucatorul greedy a fost ONEST(toate cartile = declaredType)
+                // if greedy player was HONEST(all assets = declaredType)
                 if (countLegalAssetsIfHonest(players.get(i)) == numberOfAssetsInBag) {
                     honestPlayerCaught(players.get(i), legalPenalty, numberOfAssetsInBag);
 
                 } else {
-                    //daca jucatorul greedy a fost MINCINOS
+                    // if greedy player was a LIAR.
                     int caught = 0;
                     for (int j = 0; j < numberOfAssetsInBag; j++) {
-                        //bun ilegal sau nedeclarat
+                        // legal asset or undeclared
 
                         if (players.get(i).assetsInBag.get(j).penalty == illegalPenalty
                                 || !(players.get(i).assetsInBag.get(j).name
@@ -136,13 +141,13 @@ public class BasicPlayer {
             } else {
                 if (players.get(i) instanceof BribedPlayer) {
 
-                    //daca jucatorul bribed a fost ONEST(toate cartile = declaredType)
+                    // if bribed player was HONEST(all assets = declaredType)
                     if (countLegalAssetsIfHonest(players.get(i))
                             == numberOfAssetsInBag) {
                         honestPlayerCaught(players.get(i), legalPenalty, numberOfAssetsInBag);
                     } else {
-                        //daca avea doar carti ilegale
-                        // pune in sac toate ilegalele pe care le detine
+                        // only illegal cards expected
+                        // put in the bag all illegal hold assets 
                         bribedPlayerCaught(players.get(i), assetsNames,
                                 numberOfAssetsInBag, illegalPenalty);
                     }
@@ -152,7 +157,7 @@ public class BasicPlayer {
     }
 
     final void afterInspection(final List<Assets> assetsNames) {
-        //reintregesc cartile din mana
+        // make full hand again
         while (this.assetsInHand.size() < ASSETS_IN_BAG) {
             this.assetsInHand.add(assetsNames.get(0));
             assetsNames.remove(0);
@@ -195,35 +200,35 @@ public class BasicPlayer {
 
     final void honestPlayerCaught(final BasicPlayer player,
                                   final int legalPenalty, final int numberOfAssetsInBag) {
-        //seriful plateste bani comerciantului
+        // sheriff pays coins to the merchant
         player.coins += numberOfAssetsInBag * legalPenalty;
         this.coins -= numberOfAssetsInBag * legalPenalty;
 
-        //pune pe taraba toate cartile din sac si golesc sacul
+        // put on the table all assets from the bag and empty it 
         player.assetsOnMerchantStand.addAll(player.assetsInBag);
         player.assetsInBag.clear();
     }
 
     final void liarPlayerCaught(final BasicPlayer player,
                                 final List<Assets> assetsNames, final int indexInTheBag) {
-        //seriful castiga penalty pt fiecare bun ilegal / nedeclarat
+        // sheriff wins penalty for every illegal / undeclared asset
         this.coins += player.assetsInBag.get(indexInTheBag).penalty;
         player.coins -= player.assetsInBag.get(indexInTheBag).penalty;
 
-        //cartile confiscate se duc inapoi in pachetul de carti
+        // confiscated assets goe back to the deck of cards
         assetsNames.add(player.assetsInBag.get(indexInTheBag));
         player.assetsInBag.remove(indexInTheBag);
     }
 
     final void bribedPlayerCaught(final BasicPlayer player, final List<Assets> assetsNames,
                                   final int numberOfAssetsInBag, final int illegalPenalty) {
-        //nu accepta mita -> revine mita in banii sai
+        // do not accept bribe -> bribe comes back in his own
         player.coins += player.bribe;
         player.bribe = 0;
         this.coins += numberOfAssetsInBag * illegalPenalty;
         player.coins -= numberOfAssetsInBag * illegalPenalty;
 
-        //se confisca cartile -> revin in pachet
+        // cards are confiscated -> they come back to the deck of cards
         assetsNames.addAll(player.assetsInBag);
         player.assetsInBag.clear();
     }
@@ -233,7 +238,7 @@ public class BasicPlayer {
         player.coins -= firstAssetPenalty;
         this.coins += firstAssetPenalty;
 
-        //se confisca cartea ilegala
+        // the ilegal card is confiscated
         assetsNames.add(player.assetsInBag.get(0));
         player.assetsInBag.clear();
     }
@@ -253,7 +258,7 @@ public class BasicPlayer {
     }
 
     final int countIllegals() {
-        //numar cartile ilegale
+        // counting the illegal cards
         int count = 0;
         for (int i = 0; i < this.assetsInHand.size(); i++) {
             if (this.assetsInHand.get(i).penalty == ILLEGAL_PENALTY) {
