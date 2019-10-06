@@ -78,7 +78,7 @@ public final class Main {
         }
         List<BasicPlayer> comerciantPlayers = new ArrayList<>();
 
-        //fiecare runda cu serif si comercianti
+        // every round with sheriffs and merchants
         GameLogic.playGame(comerciantPlayers, numberOfPlayers, players, assetsNames);
 
         int[] score = new int[numberOfPlayers];
@@ -86,12 +86,12 @@ public final class Main {
             score[i] = players.get(i).computeScoreWithoutBonus();
         }
 
-        // toate tipurile de bunuri
+        // all asset types
         String[] flavors = GameLogic.getAllPossibleFlavors();
 
         if (numberOfPlayers == TWO_PLAYERS_GAME) {
 
-            //calculez frecventa bunurilor de pe taraba
+            // como=pute frequency of the assets on the table
             Map<String, Integer> countAssets1 = GameLogic.getFrequency(players.get(0));
             Map<String, Integer> countAssets2 = GameLogic.getFrequency(players.get(1));
 
@@ -108,8 +108,8 @@ public final class Main {
         }
 
         if (numberOfPlayers == THREE_PLAYERS_GAME) {
-            //frecventa bunurilor celor 3 jucatori
-            //pe taraba in final
+            // frequency of the assets of the 3 players
+            // on the table in the end
             Map<String, Integer> countAssets1 = GameLogic.getFrequency(players.get(0));
             Map<String, Integer> countAssets2 = GameLogic.getFrequency(players.get(1));
             Map<String, Integer> countAssets3 = GameLogic.getFrequency(players.get(2));
@@ -129,10 +129,10 @@ public final class Main {
         }
 
         String[] playerNames = new String[numberOfPlayers];
-        //sortez scorurile descrescator
+        // sorting the scores
         GameLogic.getSortedScores(numberOfPlayers, players, score, playerNames);
 
-        //afisare scor final
+        // displaying final scores
         for (int i = 0; i < numberOfPlayers; i++) {
             System.out.println(playerNames[i] + ": " + score[i]);
         }
