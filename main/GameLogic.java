@@ -53,8 +53,8 @@ public class GameLogic {
 
     static final BasicPlayer getAssetsInHand(final List<Assets> assetsNames,
                                              final BasicPlayer player) {
-        //iau bunurile din setul de carti
-        //le adaug in mana jucatorului
+        // get the assets from the deck of cards
+        // add them in player's hand
         while (player.assetsInHand.size() < ASSETS_IN_BAG) {
             Assets newAsset = assetsNames.get(0);
             player.assetsInHand.add(newAsset);
@@ -86,7 +86,7 @@ public class GameLogic {
             int sheriffIndex = (i - 1) % numberOfPlayers;
             BasicPlayer sheriff = players.get(sheriffIndex);
 
-            //adaug in lista de comercianti pe cine nu este serif
+            // add in the list of merchants the one who is not a sheriff
             for (int j = 0; j < numberOfPlayers; j++) {
                 if (j != sheriffIndex) {
                     comerciantPlayers.add(players.get(j));
@@ -94,7 +94,7 @@ public class GameLogic {
             }
 
             for (int k = 0; k < comerciantPlayers.size(); k++) {
-                // adaug bunurile in sac si declar tipul
+                // add assets in the bag and declare their type
                 if (comerciantPlayers.get(k) instanceof BribedPlayer) {
                     ((BribedPlayer) comerciantPlayers.get(k)).addIllegalAssetInBagBribed();
                 } else {
@@ -102,7 +102,7 @@ public class GameLogic {
                         comerciantPlayers.get(k).setDeclaredType();
                         evenRound++;
 
-                        //daca greedy e comerciant la runda para
+                        // if greedy was a merchant on even round
                         if (evenRound % 2 == 0) {
                             ((GreedyPlayer) comerciantPlayers.get(k)).addIllegalAssetInBag();
                         }
@@ -111,7 +111,7 @@ public class GameLogic {
                     }
                 }
 
-                //fiecare serif inspecteaza
+                // every sheriff inspects
                 if (sheriff instanceof GreedyPlayer) {
                     ((GreedyPlayer) sheriff).greedySheriffInspects(comerciantPlayers, assetsNames);
                 } else {
@@ -131,7 +131,7 @@ public class GameLogic {
         String[] flavors = new String[player.assetsOnMerchantStand.size()];
         getFlavorsFromTheList(player, flavors);
         Map<String, Integer> countAssets = new HashMap<String, Integer>();
-        //calculez frecventa bunurilor din sac
+        //compute the maximum frequency of assets in the bag
         for (String asset : flavors) {
             countAssets.put(asset, countAssets.getOrDefault(asset, 0) + 1);
         }
