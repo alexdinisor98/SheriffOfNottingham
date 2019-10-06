@@ -16,7 +16,7 @@ public class GreedyPlayer extends BasicPlayer {
         this.coins = COINS;
     }
 
-    //daca are carti ilegale in mana sa o adauge pe cea mai profitabila in sac
+    // if has illegal cards in hand, add the most profitable one in the bag 
     void addIllegalAssetInBag() {
 
         if (this.countIllegals() != 0) {
@@ -35,25 +35,24 @@ public class GreedyPlayer extends BasicPlayer {
         for (int i = 0; i < comerciantPlayers.size(); i++) {
             int numberOfAssetsInBag = comerciantPlayers.get(i).assetsInBag.size();
 
-            //accepta mita de la BRIBED si il lasa sa puna totul pe taraba
+            // accept bribe from the BRIBED player and let him put everything on the table 
             if (comerciantPlayers.get(i) instanceof BribedPlayer) {
                 if (countLegalAssetsIfHonest(comerciantPlayers.get(i))
                         == numberOfAssetsInBag) {
                     super.honestPlayerCaught(comerciantPlayers.get(i),
                             legalPenalty, numberOfAssetsInBag);
 
-                } else {
-                    //accepta mita de la BRIBED si il lasa sa puna totul pe taraba
+                } else {                    
                     this.acceptsBribe(comerciantPlayers.get(i));
                 }
             } else {
-                //daca jucatorul basic a fost ONEST(toate cartile = declaredType)
+                // if BASIC player was HONEST (all cards = dclared type)
                 if (countLegalAssetsIfHonest(comerciantPlayers.get(i))
                         == numberOfAssetsInBag) {
                     super.honestPlayerCaught(comerciantPlayers.get(i),
                             legalPenalty, numberOfAssetsInBag);
                 } else {
-                    //daca avea doar carti ilegale si pune in sac doar una ilegala
+                    // if only illegal cards and puts only one illegal in the bag 
                     int firstAssetPenalty = comerciantPlayers.get(i).assetsInBag.get(0).penalty;
                     if (firstAssetPenalty == illegalPenalty &&
                             comerciantPlayers.get(i).declaredType.equals("Apple")) {
@@ -66,12 +65,12 @@ public class GreedyPlayer extends BasicPlayer {
         }
     }
 
-    //accepta mita comerciantului
+    // accept the merchant's bribe
     void acceptsBribe(BasicPlayer comerciantPlayer) {
         //seriful primeste mita
         this.coins += comerciantPlayer.bribe;
 
-        //comerciantul pune totul pe taraba
+        // the merchant puts everything on the table
         comerciantPlayer.assetsOnMerchantStand.addAll(comerciantPlayer.assetsInBag);
         comerciantPlayer.assetsInBag.clear();
     }
