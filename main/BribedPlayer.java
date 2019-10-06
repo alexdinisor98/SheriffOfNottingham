@@ -22,9 +22,9 @@ public class BribedPlayer extends BasicPlayer {
     final void addIllegalAssetInBagBribed() {
         int countIllegalAssetsAdded = 0;
         int id = 0;
-        //daca jucatorul inca mai are bani
+        // if player still has coins
         if (this.coins > 0) {
-            //nu exista carti ilegale
+            // there are no illegal cards
             if (countIllegals() == 0) {
                 super.setDeclaredType();
             } else {
@@ -58,7 +58,7 @@ public class BribedPlayer extends BasicPlayer {
         int legalPenalty = LEGAL_PENALTY;
         int illegalPenalty = ILLEGAL_PENALTY;
 
-        //nici basic nici greedy NU ofera mita -> sunt inspectati
+        // neither basic or greedy offers bribe -> they are inspected
         for (int i = 0; i < players.size(); i++) {
             int numberOfAssetsInBag = players.get(i).assetsInBag.size();
             int countLegalAssetsIfHonest = 0;
@@ -70,14 +70,14 @@ public class BribedPlayer extends BasicPlayer {
             }
 
             if (players.get(i) instanceof GreedyPlayer) {
-                //daca jucatorul greedy a fost ONEST(toate cartile = declaredType)
+                // if greedy player was HONEST (all cards = declared type)
                 if (countLegalAssetsIfHonest == numberOfAssetsInBag) {
                     super.honestPlayerCaught(players.get(i), legalPenalty, numberOfAssetsInBag);
                 } else {
-                    //daca jucatorul greedy a fost MINCINOS
+                    // if greedy player was LIAR
                     int caught = 0;
                     for (int j = 0; j < numberOfAssetsInBag; j++) {
-                        //bun ilegal sau nedeclarat
+                        // illegal or undeclared asset
                         if (players.get(i).assetsInBag.get(j).penalty == illegalPenalty
                                 || !(players.get(i).assetsInBag.get(j).name
                                 .equals(players.get(i).declaredType))) {
@@ -86,17 +86,17 @@ public class BribedPlayer extends BasicPlayer {
 
                         }
                     }
-                    //adaug bunurile declarate
+                    // adding declared assets
                     if (caught == 1) {
                         addLegalsOnMerchantstand(players.get(i));
                     }
                 }
             } else {
-                //daca jucatorul basic a fost ONEST(toate cartile = declaredType)
+                // if basic player was HONEST(all cards = declaredType)
                 if (countLegalAssetsIfHonest == numberOfAssetsInBag) {
                     super.honestPlayerCaught(players.get(i), legalPenalty, numberOfAssetsInBag);
                 } else {
-                    //daca avea doar carti ilegale si pune in sac doar una ilegala
+                    // if only illegal cards in hand and adds one illegal in the bag
                     int firstPenalty = players.get(i).assetsInBag.get(0).penalty;
                     if (firstPenalty == illegalPenalty
                             && players.get(i).declaredType.equals("Apple")) {
